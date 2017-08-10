@@ -23,18 +23,6 @@ func main() {
 	if err != nil {
 		fmt.Println("google Place Search Error!!", err)
 	}
-	//filterResults(coffeeList)  //filter.go
-	/*
-		var data []datamodel.Comment
-		n := 0
-		for i := 0; i < len(coffeeList); i++ {
-			for j := 0; j < len(coffeeList[i].Reviews); j++ {
-
-				data[n+j].PlaceID = coffeeList[i].Reviews[j].StoreId
-			}
-			//fmt.Println(coffeeList[cof].Reviews)
-			n = n + 5
-	*/
 
 	//create index
 	index_dir = "random"
@@ -58,9 +46,9 @@ func main() {
 	}
 
 	//print top3
-	err = FindIDInfo(first, second, third, coffeeList)
+
 	if err != nil {
 		fmt.Println("Find ID Info Error!!", err)
 
-
+	}
 }
