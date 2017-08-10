@@ -56,19 +56,11 @@ func main() {
 	if err != nil {
 		fmt.Println("Find Top3 Error!!", err)
 	}
-	/*
-		//print top3
-		err = FindIDInfo(first)
-		if err != nil {
-			fmt.Println("Find ID Info Error!!", err)
-		}
-		err = FindIDInfo(second)
-		if err != nil {
-			fmt.Println("Find ID Info Error!!", err)
-		}
-		err = FindIDInfo(third)
-		if err != nil {
-			fmt.Println("Find ID Info Error!!", err)
-		}
-	*/
+
+	//print top3
+	err = FindIDInfo(first, second, third, coffeeList)
+	if err != nil {
+		fmt.Println("Find ID Info Error!!", err)
+
+
 }

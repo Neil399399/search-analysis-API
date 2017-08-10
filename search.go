@@ -11,7 +11,7 @@ import (
 
 func PlaceSearch() ([]datamodel.Coffee, error) {
 	var radius uint
-	APIKey := "AIzaSyAFictx33AgxsMkYF-fHCkeakTlBiIZIV4"
+	APIKey := "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
 	location := &maps.LatLng{Lat: 25.054989, Lng: 121.533359}
 	radius = 500
 	keyword := "coffee"

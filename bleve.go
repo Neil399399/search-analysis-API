@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"search-analysis-API/datamodel"
-	"search-analysis-API/storage/sqlstore"
 	"sort"
 
 	"github.com/blevesearch/bleve"
@@ -56,7 +55,7 @@ func jiebatest(index_dir string, com []datamodel.Coffee) (map[string]int, error)
 			panic(err)
 		}
 	*/
-	indexMapping.DefaultAnalyzer = "gojieba"
+	//	indexMapping.DefaultAnalyzer = "gojieba"
 
 	querys := []string{
 		"環境舒服",
@@ -156,23 +155,28 @@ func SortTotal(data map[string]int) ([]CountArray, error) {
 }
 func Top3(array []CountArray) (string, string, string, error) {
 
-	var top,top2,top3 string
+	var top1, top2, top3 string
 	top1 = array[0].id
 	top2 = array[1].id
 	top3 = array[2].id
 
-	}
-
 	return top1, top2, top3, nil
 }
 
-func FindIDInfo(first string, com []datamodel.Coffee) error {
+func FindIDInfo(first, second, third string, com []datamodel.Coffee) error {
 
-	for i:=0;i<len(com); i++{
-		if first==com[i].Reviews[0].StoreId{
-		fmt.Println(com[i].Name)
+	for idx, cof := range com {
+		if len(cof.Reviews) > 0 {
+			if first == cof.Reviews[0].StoreId {
+				fmt.Println(com[idx].Name)
+			}
+			if second == cof.Reviews[0].StoreId {
+				fmt.Println(com[idx].Name)
+			}
+			if third == cof.Reviews[0].StoreId {
+				fmt.Println(com[idx].Name)
+			}
 		}
-
 	}
 	return nil
 }
