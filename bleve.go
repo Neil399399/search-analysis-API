@@ -25,31 +25,6 @@ var (
 	placeID string
 )
 
-func CreateIndex(com []datamodel.Coffee, index_dir string) error {
-	// open a new index
-	mapping := bleve.NewIndexMapping()
-	index, err := bleve.New(index_dir, mapping)
-	if err != nil {
-		fmt.Println("The index was excited!! Please change index name !!", err)
-		return err
-	}
-
-	for i := 0; i < len(com); i++ {
-		err = index.Index(com[i].Id, com[i].Reviews)
-		if err != nil {
-			return err
-		}
-	}
-	index.Close()
-	/*
-		// index some data
-		for i := 0; i < len(com); i++ {
-			err = index.Index(com[i].ID, com[i].Comment)
-			//fmt.Println(com[i].Comment)
-		}*/
-	return nil
-}
-
 func jiebatest(index_dir string, com []datamodel.Coffee) (map[string]int, error) {
 	type Result struct {
 		Id    string
@@ -70,20 +45,22 @@ func jiebatest(index_dir string, com []datamodel.Coffee) (map[string]int, error)
 	if err != nil {
 		fmt.Println("Tokenizer Error!!", err)
 	}
-	err = indexMapping.AddCustomAnalyzer("gojieba",
-		map[string]interface{}{
-			"type":      "gojieba",
-			"tokenizer": "gojieba",
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
+	/*
+		err = indexMapping.AddCustomAnalyzer("gojieba",
+			map[string]interface{}{
+				"type":      "gojieba",
+				"tokenizer": "gojieba",
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
+	*/
 	indexMapping.DefaultAnalyzer = "gojieba"
 
 	querys := []string{
 		"環境舒服",
-		"不錯",
+		"服務好",
 		"咖啡好喝",
 		"好喝",
 		"好",
@@ -178,58 +155,24 @@ func SortTotal(data map[string]int) ([]CountArray, error) {
 	return countarrays, nil
 }
 func Top3(array []CountArray) (string, string, string, error) {
-	sqlStore := sqlstore.NewWriteToSQL("root", "123456", "localhost", "hello")
-	var top [3]string
-	var Top map[string]interface{}
-	Top = make(map[string]interface{})
-	for i := 0; i < len(array); i++ {
-		data := datamodel.Coffee{}
-		data.Id = array[i].id
-		sql_res, err := sqlStore.ReadPlaceID(data)
-		if err != nil {
-			fmt.Println("Search PlaceID in SQL Error!!", err)
-		}
-		for sql_res.Next() {
-			err := sql_res.Scan(&placeID)
-			if err != nil {
-				fmt.Println("SQL Result Print Error!!", err)
-			}
-		}
 
-		//find same placeID
-		if Top[placeID] == nil {
-			Top[placeID] = "excited"
-		}
-	}
-	i := 0
-	for k, _ := range Top {
-		if i < 3 {
-			top[i] = k
-			i++
-		} else {
-			break
-		}
+	var top,top2,top3 string
+	top1 = array[0].id
+	top2 = array[1].id
+	top3 = array[2].id
+
 	}
 
-	return top[0], top[1], top[2], nil
+	return top1, top2, top3, nil
 }
 
-func FindIDInfo(first string) error {
+func FindIDInfo(first string, com []datamodel.Coffee) error {
 
-	data := datamodel.Coffee{}
-	data.Name = first
-	sqlStore := sqlstore.NewWriteToSQL("root", "123456", "localhost", "hello")
-	sql_res, err := sqlStore.ReadName(data)
-	if err != nil {
-		fmt.Println("Search PlaceID in SQL Error!!", err)
-	}
-	for sql_res.Next() {
-		err := sql_res.Scan(&name)
-		if err != nil {
-			fmt.Println("SQL Result Print Error!!", err)
+	for i:=0;i<len(com); i++{
+		if first==com[i].Reviews[0].StoreId{
+		fmt.Println(com[i].Name)
 		}
 
-		fmt.Println(name)
 	}
 	return nil
 }

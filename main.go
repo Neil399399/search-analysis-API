@@ -38,30 +38,25 @@ func main() {
 
 	//create index
 	index_dir = "random"
-	/*
-		err = CreateIndex(coffeeList, index_dir)
-		if err != nil {
-			fmt.Println("CreateIndex Error!!", err)
-		}
-	*/
+
 	//run jieba
 	jieb_res, err := jiebatest(index_dir, coffeeList)
 	if err != nil {
 		fmt.Println("jieba Error!!", err)
 	}
 	err = CountResult(jieb_res)
+	//count total
+	sort_res, err := SortTotal(jieb_res)
+	if err != nil {
+		fmt.Println("Sort Total Error!!", err)
+	}
 
+	//find top3
+	first, second, third, err := Top3(sort_res)
+	if err != nil {
+		fmt.Println("Find Top3 Error!!", err)
+	}
 	/*
-		//count total
-		sort_res, err := SortTotal(jieb_res)
-		if err != nil {
-			fmt.Println("Sort Total Error!!", err)
-		}
-		//find top3
-		first, second, third, err := Top3(sort_res)
-		if err != nil {
-			fmt.Println("Find Top3 Error!!", err)
-		}
 		//print top3
 		err = FindIDInfo(first)
 		if err != nil {
