@@ -20,7 +20,7 @@ import (
 	return results
 */
 var (
-	port   = "80"
+	port   = "8080"
 	Search datamodel.Search
 )
 
@@ -111,7 +111,8 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Println("Json Marchal Error!!", err)
 	}
-	fmt.Fprint(w, b)
+
+	fmt.Fprint(w, string(b))
 }
 
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {

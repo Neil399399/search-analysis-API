@@ -14,7 +14,7 @@ type Client struct {
 }
 
 var (
-	url = "http://d528357c.ngrok.io"
+	url = "http://40d9dec3.ngrok.io"
 )
 
 func init() {}

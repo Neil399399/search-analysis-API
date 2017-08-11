@@ -7,12 +7,13 @@ import (
 	"sort"
 
 	"github.com/blevesearch/bleve"
-	"github.com/yanyiwu/gojieba"
 )
 
+/*
 type JiebaTokenizer struct {
 	handle *gojieba.Jieba
 }
+*/
 
 type CountArray struct {
 	id    string
