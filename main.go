@@ -20,7 +20,7 @@ import (
 	return results
 */
 var (
-	port   = "8080"
+	port   = "80"
 	Search datamodel.Search
 )
 
@@ -34,7 +34,7 @@ func main() {
 		//handle
 		//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
 		http.HandleFunc("/search", DataSearch)
-		//http.HandleFunc("/analysis", DataAnalysis)
+		http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
 
 		err := http.ListenAndServe(":"+port, nil)

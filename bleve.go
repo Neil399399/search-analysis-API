@@ -7,13 +7,12 @@ import (
 	"sort"
 
 	"github.com/blevesearch/bleve"
+	"github.com/yanyiwu/gojieba"
 )
 
-/*
 type JiebaTokenizer struct {
 	handle *gojieba.Jieba
 }
-*/
 
 type CountArray struct {
 	id    string
@@ -22,14 +21,14 @@ type CountArray struct {
 
 var (
 	querys []string
-	index  bleve.Index
+	Index  bleve.Index
 )
 
 func init() {
 	//bleve.Open
 	indexMapping := bleve.NewIndexMapping()
-	_, err := bleve.NewMemOnly(indexMapping)
-
+	index, err := bleve.NewMemOnly(indexMapping)
+	Index = index
 	if err != nil {
 		panic("bleve open failed!!" + err.Error())
 	}
@@ -51,7 +50,7 @@ func init() {
 
 func getFreeIndex() bleve.Index {
 
-	return index
+	return Index
 }
 
 func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) {
