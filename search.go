@@ -40,7 +40,7 @@ func PlaceSearch(KEYWORD string, LAT, LNG float64) ([]datamodel.Coffee, error) {
 		resp, err := c.NearbySearch(context.Background(), request)
 		if err != nil {
 			//#WARNING, study HOW it breaks
-			fmt.Println("Search over!!", err)
+			fmt.Println("Search over!!")
 			break
 		}
 
