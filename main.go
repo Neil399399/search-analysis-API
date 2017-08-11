@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"search-analysis-API/datamodel"
+	"strconv"
 )
 
 /*
@@ -13,42 +16,191 @@ import (
 	return results
 */
 var (
-	index_dir       string
-	input_indexname string
+	port   = "8080"
+	Search datamodel.Search
 )
 
 func main() {
-	//search
-	coffeeList, err := PlaceSearch()
-	if err != nil {
-		fmt.Println("google Place Search Error!!", err)
+	APIKey = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+
+	//wwww.google.com/maps?long=30&lat=30
+	//http server
+	myFunction := func() {
+		//handle
+		//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
+		http.HandleFunc("/search", DataSearch)
+		//http.HandleFunc("/analysis", DataAnalysis)
+		http.HandleFunc("/search-analysis", DataSearch_Analysis)
+
+		err := http.ListenAndServe(":"+port, nil)
+		if err != nil {
+			panic("Connect Fail:" + err.Error())
+		}
 	}
+	go myFunction()
 
 	//create index
-	index_dir = "random"
 
-	//run jieba
-	jieb_res, err := jiebatest(index_dir, coffeeList)
-	if err != nil {
-		fmt.Println("jieba Error!!", err)
+}
+
+/*
+1 search: /search?lat... <- list results
+2 analyze:/search?listresults <- get analysis
+3 create UI
+
+
+*/
+
+func DataSearch(w http.ResponseWriter, req *http.Request) {
+
+	//check
+
+	Search.APIKEY = APIKey
+	Search.KEYWORD = keyword
+
+	Search.Verify(Search)
+	if !Search.Verify(Search) {
+		return
+	} else {
+		if req.Method == "GET" {
+			w.Header().Set("Content-Type", "json")
+			lat := req.FormValue("LAT")
+			lng := req.FormValue("LNG")
+			keyword := req.FormValue("KEYWORD")
+
+			//check lat,lng format
+			if len(lat) != 0 {
+				lat64, err := strconv.ParseFloat(lat, 64)
+				if err != nil {
+					fmt.Println("LAT has wrong  format !!!")
+					return
+				}
+				Search.LAT = lat64
+			}
+			if len(lng) != 0 {
+				lng64, err := strconv.ParseFloat(lng, 64)
+				if err != nil {
+					fmt.Println("LNG has wrong  format !!!")
+					return
+				}
+
+				Search.LNG = lng64
+			}
+			//search
+			List, err := PlaceSearch(keyword, Search.LAT, Search.LNG)
+			if err != nil {
+				fmt.Println("google Place Search Error!!", err)
+				http.Error(w, "Bad Request", http.StatusBadRequest)
+				return
+			}
+			fmt.Println("google  Search Success!!", err)
+			fmt.Fprint(w, List)
+
+		}
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
 	}
-	err = CountResult(jieb_res)
-	//count total
-	sort_res, err := SortTotal(jieb_res)
-	if err != nil {
-		fmt.Println("Sort Total Error!!", err)
+}
+
+/*
+func DataAnalysis(w http.ResponseWriter, req *http.Request) {
+	var List []datamodel.Coffee
+	if req.Method == "POST" {
+		w.Header().Set("Content-Type", "application/json")
+
+		//run jieba
+		jiebres, err := jiebatest(List, querys)
+		if err != nil {
+			fmt.Println("jieba Error!!", err)
+		}
+		//count total
+		sortres, err := SortTotal(jiebres)
+		if err != nil {
+			fmt.Println("Sort Total Error!!", err)
+		}
+
+		//find top3
+		first, second, third, err := Top3(sortres)
+		if err != nil {
+			fmt.Println("Find Top3 Error!!", err)
+		}
+
+		//print top3
+		err = FindIDInfo(first, second, third, coffeeList)
+		if err != nil {
+			fmt.Println("Find ID Info Error!!", err)
+
+		}
 	}
+}
+*/
+func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 
-	//find top3
-	first, second, third, err := Top3(sort_res)
-	if err != nil {
-		fmt.Println("Find Top3 Error!!", err)
+	//check
+	Search.APIKEY = APIKey
+	Search.KEYWORD = keyword
+
+	Search.Verify(Search)
+	if !Search.Verify(Search) {
+		return
 	}
+	if req.Method == "GET" {
+		w.Header().Set("Content-Type", "json")
+		lat := req.FormValue("LAT")
+		lng := req.FormValue("LNG")
+		keyword := req.FormValue("KEYWORD")
 
-	//print top3
+		//check lat,lng format
+		if len(lat) != 0 {
+			lat64, err := strconv.ParseFloat(lat, 64)
+			if err != nil {
+				fmt.Println("LAT has wrong  format !!!")
+				return
+			}
+			Search.LAT = lat64
+		}
+		if len(lng) != 0 {
+			lng64, err := strconv.ParseFloat(lng, 64)
+			if err != nil {
+				fmt.Println("LNG has wrong  format !!!")
+				return
+			}
+			Search.LNG = lng64
+		}
+		//search
+		List, err := PlaceSearch(keyword, Search.LAT, Search.LNG)
+		if err != nil {
+			fmt.Println("google Place Search Error!!", err)
+			http.Error(w, "Bad Request", http.StatusBadRequest)
+			return
+		}
+		fmt.Println("google  Search Success!!", err)
+		//Analysis
+		jiebres, err := jiebatest(List, querys)
+		if err != nil {
+			fmt.Println("jieba Error!!", err)
+		}
+		//count total
+		sortres, err := SortTotal(jiebres)
+		if err != nil {
+			fmt.Println("Sort Total Error!!", err)
+		}
 
-	if err != nil {
-		fmt.Println("Find ID Info Error!!", err)
+		//find top3
+		first, second, third, err := Top3(sortres)
+		if err != nil {
+			fmt.Println("Find Top3 Error!!", err)
+		}
+
+		//print top3
+		err = FindIDInfo(first, second, third, List)
+		if err != nil {
+			fmt.Println("Find ID Info Error!!", err)
+		}
+		fmt.Fprint(w, FindIDInfo(first, second, third, List))
 
 	}
+	http.Error(w, "Bad Request", http.StatusBadRequest)
+	return
+
 }

@@ -7,12 +7,12 @@ import (
 	"sort"
 
 	"github.com/blevesearch/bleve"
-	"github.com/yanyiwu/gojieba"
 )
 
+/*
 type JiebaTokenizer struct {
 	handle *gojieba.Jieba
-}
+}*/
 
 type CountArray struct {
 	id    string
@@ -20,18 +20,19 @@ type CountArray struct {
 }
 
 var (
-	name    string
-	placeID string
+	querys []string
+	index  bleve.Index
 )
 
-func jiebatest(index_dir string, com []datamodel.Coffee) (map[string]int, error) {
-	type Result struct {
-		Id    string
-		Score float64
-	}
-
+func init() {
+	//bleve.Open
 	indexMapping := bleve.NewIndexMapping()
-	err := indexMapping.AddCustomTokenizer("gojieba",
+	index, err := bleve.NewMemOnly(indexMapping)
+	getFreeIndex(index)
+	if err != nil {
+		panic("bleve open failed!!" + err.Error())
+	}
+	err = indexMapping.AddCustomTokenizer("gojieba",
 		map[string]interface{}{
 			"dictpath":   "jieba/dict.txt",
 			"hmmpath":    "jieba/hmm_model.utf8",
@@ -40,56 +41,38 @@ func jiebatest(index_dir string, com []datamodel.Coffee) (map[string]int, error)
 			"type":       "unicode",
 		},
 	)
-
 	if err != nil {
 		fmt.Println("Tokenizer Error!!", err)
+		panic("bleve open failed!!" + err.Error())
 	}
-	/*
-		err = indexMapping.AddCustomAnalyzer("gojieba",
-			map[string]interface{}{
-				"type":      "gojieba",
-				"tokenizer": "gojieba",
-			},
-		)
-		if err != nil {
-			panic(err)
-		}
-	*/
-	//	indexMapping.DefaultAnalyzer = "gojieba"
 
-	querys := []string{
-		"環境舒服",
-		"服務好",
-		"咖啡好喝",
-		"好喝",
-		"好",
+}
+
+func getFreeIndex(index bleve.Index) bleve.Index {
+	return index
+}
+
+func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) {
+	type Result struct {
+		Id    string
+		Score float64
 	}
 
 	//create index_dir
-	index, err := bleve.New(index_dir, indexMapping)
-	if err != nil {
-		panic(err)
-	}
 	for i := 0; i < len(com); i++ {
-		err = index.Index(com[i].Id, com[i].Reviews)
+		err := getFreeIndex(index).Index(com[i].Id, com[i].Reviews)
 		if err != nil {
 
 		}
 	}
 
-	/*
-		index, err := bleve.Open(index_dir)
-		if err != nil {
-			fmt.Println("Open index Error!!", err)
-		}
-	*/
 	dataCounter := make(map[string]int)
 	for _, q := range querys {
 
 		req := bleve.NewSearchRequest(bleve.NewQueryStringQuery(q))
 
 		req.Highlight = bleve.NewHighlight()
-		res, err := index.Search(req)
+		res, err := getFreeIndex(index).Search(req)
 		if err != nil {
 			panic(err)
 		}
@@ -102,7 +85,7 @@ func jiebatest(index_dir string, com []datamodel.Coffee) (map[string]int, error)
 			dataCounter[results[i].Id]++
 		}
 	}
-	index.Close()
+	getFreeIndex(index).Close()
 	return dataCounter, nil
 }
 
@@ -168,13 +151,13 @@ func FindIDInfo(first, second, third string, com []datamodel.Coffee) error {
 	for idx, cof := range com {
 		if len(cof.Reviews) > 0 {
 			if first == cof.Reviews[0].StoreId {
-				fmt.Println(com[idx].Name)
+				fmt.Println("TOP1", com[idx].Name)
 			}
 			if second == cof.Reviews[0].StoreId {
-				fmt.Println(com[idx].Name)
+				fmt.Println("TOP2", com[idx].Name)
 			}
 			if third == cof.Reviews[0].StoreId {
-				fmt.Println(com[idx].Name)
+				fmt.Println("TOP3", com[idx].Name)
 			}
 		}
 	}

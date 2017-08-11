@@ -9,12 +9,18 @@ import (
 	"googlemaps.github.io/maps"
 )
 
-func PlaceSearch() ([]datamodel.Coffee, error) {
+var (
+	APIKey   string // "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+	Lat, Lng float64
+	keyword  string //"coffee"
+
+)
+
+func PlaceSearch(KEYWORD string, LAT, LNG float64) ([]datamodel.Coffee, error) {
 	var radius uint
-	APIKey := "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
-	location := &maps.LatLng{Lat: 25.054989, Lng: 121.533359}
+	location := &maps.LatLng{Lat: LAT, Lng: LNG}
 	radius = 500
-	keyword := "coffee"
+	keyword = KEYWORD
 	language := "zh-TW"
 
 	c, err := maps.NewClient(maps.WithAPIKey(APIKey))
