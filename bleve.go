@@ -28,8 +28,8 @@ var (
 func init() {
 	//bleve.Open
 	indexMapping := bleve.NewIndexMapping()
-	index, err := bleve.NewMemOnly(indexMapping)
-	getFreeIndex(index)
+	_, err := bleve.NewMemOnly(indexMapping)
+
 	if err != nil {
 		panic("bleve open failed!!" + err.Error())
 	}
@@ -49,7 +49,8 @@ func init() {
 
 }
 
-func getFreeIndex(index bleve.Index) bleve.Index {
+func getFreeIndex() bleve.Index {
+
 	return index
 }
 
@@ -61,7 +62,7 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 
 	//create index_dir
 	for i := 0; i < len(com); i++ {
-		err := getFreeIndex(index).Index(com[i].Id, com[i].Reviews)
+		err := getFreeIndex().Index(com[i].Id, com[i].Reviews)
 		if err != nil {
 
 		}
@@ -73,7 +74,7 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 		req := bleve.NewSearchRequest(bleve.NewQueryStringQuery(q))
 
 		req.Highlight = bleve.NewHighlight()
-		res, err := getFreeIndex(index).Search(req)
+		res, err := getFreeIndex().Search(req)
 		if err != nil {
 			panic(err)
 		}
@@ -86,7 +87,7 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 			dataCounter[results[i].Id]++
 		}
 	}
-	getFreeIndex(index).Close()
+	getFreeIndex().Close()
 	return dataCounter, nil
 }
 
