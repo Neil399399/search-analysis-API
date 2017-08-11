@@ -117,6 +117,7 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 	var list []datamodel.Coffee
+
 	if req.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -154,8 +155,9 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 		err = FindIDInfo(first, second, third, list)
 		if err != nil {
 			fmt.Println("Find ID Info Error!!", err)
-
 		}
+		fmt.Fprint(w, FindIDInfo(first, second, third, list))
+
 	}
 }
 
