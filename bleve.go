@@ -155,20 +155,20 @@ func Top3(array []CountArray) (string, string, string, error) {
 	return top1, top2, top3, nil
 }
 
-func FindIDInfo(first, second, third string, com []datamodel.Coffee) error {
-
+func FindIDInfo(first, second, third string, com []datamodel.Coffee) (string, string, string, error) {
+	var TOP1NAME, TOP2NAME, TOP3NAME string
 	for idx, cof := range com {
 		if len(cof.Reviews) > 0 {
 			if first == cof.Reviews[0].StoreId {
-				fmt.Println("TOP1", com[idx].Name)
+				TOP1NAME = com[idx].Name
 			}
 			if second == cof.Reviews[0].StoreId {
-				fmt.Println("TOP2", com[idx].Name)
+				TOP2NAME = com[idx].Name
 			}
 			if third == cof.Reviews[0].StoreId {
-				fmt.Println("TOP3", com[idx].Name)
+				TOP3NAME = com[idx].Name
 			}
 		}
 	}
-	return nil
+	return TOP1NAME, TOP2NAME, TOP3NAME, nil
 }

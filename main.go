@@ -117,7 +117,7 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 	var list []datamodel.Coffee
-
+	var top [3]string
 	if req.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -152,10 +152,15 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 		}
 
 		//print top3
-		b, err := json.Marshal(FindIDInfo(first, second, third, list))
+
+		top1, top2, top3, err := FindIDInfo(first, second, third, list)
 		if err != nil {
 			fmt.Println("json marshal failed!!", err)
 		}
+		top[0] = top1
+		top[1] = top2
+		top[2] = top3
+		b, err := json.Marshal(top)
 		fmt.Fprint(w, string(b))
 		if err != nil {
 			fmt.Println("Find ID Info Error!!", err)
