@@ -170,6 +170,7 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 }
 
 func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
+	var top [3]string
 	if req.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -232,10 +233,18 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//print top3
-	err = FindIDInfo(first, second, third, List)
+
+	top1, top2, top3, err := FindIDInfo(first, second, third, List)
+	if err != nil {
+		fmt.Println("json marshal failed!!", err)
+	}
+	top[0] = top1
+	top[1] = top2
+	top[2] = top3
+	b, err := json.Marshal(top)
+	fmt.Fprint(w, string(b))
 	if err != nil {
 		fmt.Println("Find ID Info Error!!", err)
 	}
-	fmt.Fprint(w, FindIDInfo(first, second, third, List))
 
 }

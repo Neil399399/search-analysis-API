@@ -94,7 +94,7 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 			dataCounter[results[i].Id]++
 		}
 	}
-	getFreeIndex().Close()
+
 	return dataCounter, nil
 }
 
