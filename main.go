@@ -152,11 +152,14 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 		}
 
 		//print top3
-		err = FindIDInfo(first, second, third, list)
+		b, err := json.Marshal(FindIDInfo(first, second, third, list))
+		if err != nil {
+			fmt.Println("json marshal failed!!", err)
+		}
+		fmt.Fprint(w, string(b))
 		if err != nil {
 			fmt.Println("Find ID Info Error!!", err)
 		}
-		fmt.Fprint(w, FindIDInfo(first, second, third, list))
 
 	}
 }
