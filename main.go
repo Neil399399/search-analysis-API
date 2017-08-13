@@ -118,8 +118,12 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 	var list []datamodel.Coffee
 	var top [3]string
+	var querys []string
 	if req.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json")
+		querys[0] = req.FormValue("analysis word 1")
+		querys[1] = req.FormValue("analysis word 2")
+		querys[2] = req.FormValue("analysis word 3")
 
 		body, err := ioutil.ReadAll(req.Body)
 		if err != nil {
@@ -214,7 +218,7 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("google  Search Success!!", err)
+	fmt.Println("google  Search Success!!")
 	//Analysis
 	jiebres, err := jiebatest(List, querys)
 	if err != nil {
