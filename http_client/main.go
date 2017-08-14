@@ -14,15 +14,27 @@ type Client struct {
 }
 
 var (
-	url = "http://40d9dec3.ngrok.io"
+	url  = "http://40d9dec3.ngrok.io"
+	port = "8080"
 )
 
 func init() {}
 
 func main() {
+	//handle
+	//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
+	http.HandleFunc("/form", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(w, WebView)
+	})
+
+	//http.HandleFunc("/")
+
+	err := http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		panic("Connect Fail:" + err.Error())
+	}
 
 	client := &Client{url: "http://d528357c.ngrok.io", contentType: "json"}
-
 	GetFromCmd(client)
 
 }
@@ -53,6 +65,11 @@ func GetFromCmd(client *Client) {
 
 	}
 
+}
+
+func (c *Client) GetSearchandANalaysis() error {
+
+	return nil
 }
 
 func (c *Client) GetSearch() error {
@@ -89,6 +106,11 @@ func (c *Client) GetSearch() error {
 		fmt.Println("connect error!!: ", err)
 	}
 	if response.StatusCode != http.StatusOK {
+		//decode body into []datamodel.Coffee
+		//type RequestMessage struct {
+		//
+		//}
+
 		return errors.New(response.Status)
 	}
 	return nil

@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,7 +33,7 @@ func main() {
 		//handle
 		//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
 		http.HandleFunc("/search", DataSearch)
-		http.HandleFunc("/analysis", DataAnalysis)
+		//http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
 
 		err := http.ListenAndServe(":"+port, nil)
@@ -115,23 +114,31 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, string(b))
 }
 
+/*
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {
-	var list []datamodel.Coffee
 	var top [3]string
-	var querys []string
+	var name1, name2, name3 string
+	querys = []string{name1, name2, name3}
 	if req.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json")
-		querys[0] = req.FormValue("analysis word 1")
-		querys[1] = req.FormValue("analysis word 2")
-		querys[2] = req.FormValue("analysis word 3")
+		name1 = req.FormValue("analysis word 1")
+		name2 = req.FormValue("analysis word 2")
+		name3 = req.FormValue("analysis word 3")
 
 		body, err := ioutil.ReadAll(req.Body)
 		if err != nil {
 			http.Error(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
+
+		type RequestMessage struct {
+			Params []string
+			Data   []datamodel.Coffee
+		}
+
+		var requestMessage RequestMessage
 		//check err
-		err = json.Unmarshal(body, &list)
+		err = json.Unmarshal(body, &requestMessage)
 		if err != nil {
 			fmt.Println("Json Unmarshal Error!!", err)
 			return
@@ -172,9 +179,10 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 
 	}
 }
-
+*/
 func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	var top [3]string
+
 	if req.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -183,6 +191,10 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	lat := req.FormValue("LAT")
 	lng := req.FormValue("LNG")
 	keyword := req.FormValue("KEYWORD")
+	name1 := req.FormValue("analysis_word1")
+	name2 := req.FormValue("analysis_word2")
+	name3 := req.FormValue("analysis_word3")
+	querys = []string{name1, name2, name3}
 
 	//check lat,lng format from http
 	if len(lat) != 0 {

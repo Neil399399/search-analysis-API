@@ -7,12 +7,12 @@ import (
 	"sort"
 
 	"github.com/blevesearch/bleve"
-	"github.com/yanyiwu/gojieba"
 )
 
+/*
 type JiebaTokenizer struct {
 	handle *gojieba.Jieba
-}
+}*/
 
 type CountArray struct {
 	id    string
@@ -25,14 +25,15 @@ var (
 )
 
 func init() {
-	/*querys = []string{
-		"環境舒服",
-		"不錯",
-		"咖啡好喝",
-		"好喝",
-		"好",
-	}
-	*/
+	/*
+		querys = []string{
+			"環境舒服",
+			"不錯",
+			"新鮮",
+			"好吃",
+			"好",
+		}*/
+
 	//bleve.Open
 	indexMapping := bleve.NewIndexMapping()
 	index, err := bleve.NewMemOnly(indexMapping)
