@@ -60,6 +60,7 @@ func main() {
 */
 
 func DataSearch(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if req.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -182,6 +183,8 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 */
 func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	var top [3]string
+	//set header to tell server which http domain can connect
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if req.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)

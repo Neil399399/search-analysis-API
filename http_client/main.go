@@ -1,11 +1,8 @@
 package main
 
 import (
-	"bufio"
-	"errors"
 	"fmt"
 	"net/http"
-	"os"
 )
 
 type Client struct {
@@ -14,8 +11,10 @@ type Client struct {
 }
 
 var (
-	url  = "http://40d9dec3.ngrok.io"
-	port = "8080"
+	url           = "http://localhost"
+	ngrokFrontend = "http://2ebeba59.ngrok.io"
+	ngrokBackend  = "http://b5742cca.ngrok.io"
+	port          = "8080"
 )
 
 func init() {}
@@ -27,18 +26,17 @@ func main() {
 		fmt.Fprint(w, WebView)
 	})
 
-	//http.HandleFunc("/")
-
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		panic("Connect Fail:" + err.Error())
 	}
-
-	client := &Client{url: "http://d528357c.ngrok.io", contentType: "json"}
-	GetFromCmd(client)
-
+	/*
+		client := &Client{url: url, contentType: "json"}
+		err = client.GetSearchandAnalaysis()
+	*/
 }
 
+/*
 func GetFromCmd(client *Client) {
 	for {
 		reader := bufio.NewReader(os.Stdin)
@@ -66,12 +64,15 @@ func GetFromCmd(client *Client) {
 	}
 
 }
-
-func (c *Client) GetSearchandANalaysis() error {
+*/
+/*
+func (c *Client) GetSearchandAnalaysis() error {
+	request, err := http.NewRequest("GET", c.url+"/search-analysis", nil)
 
 	return nil
-}
+}*/
 
+/*
 func (c *Client) GetSearch() error {
 
 	reader := bufio.NewReader(os.Stdin)
@@ -115,3 +116,4 @@ func (c *Client) GetSearch() error {
 	}
 	return nil
 }
+*/
