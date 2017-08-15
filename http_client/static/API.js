@@ -1,12 +1,11 @@
 var searchdata = Object
 function SForm(e) {
 	
-	if (e.preventDefault) e.preventDefault();
-	
+    if (e.preventDefault) e.preventDefault();
 	var lat = document.getElementById("search").elements[0].value;
 	var lng = document.getElementById("search").elements[1].value;
 	var keyword = document.getElementById("search").elements[2].value;
-	$.get("` + ngrokFrontend + `/search",{LAT:lat,LNG:lng,KEYWORD: keyword }, function(data){
+	$.get(ngrokFrontend+"/search",{LAT:lat,LNG:lng,KEYWORD: keyword }, function(data){
         searchdata = data
         values=JSON.stringify(data);
 	alert("Results:"+"\n"+values);
@@ -25,10 +24,9 @@ function AForm(e) {
      RequestMessage.Data = searchdata
      jsonmessage=JSON.stringify(RequestMessage)
      $.ajax({
-        url : "` + ngrokFrontend + `/analysis",
+        url : ngrokFrontend+"/analysis",
         type: "POST",
         data: jsonmessage,
-        contentType: "application/json",
         dataType   : "json",
         success    : function(resultdata){
             	values=JSON.stringify(resultdata);
@@ -49,7 +47,7 @@ function SAForm(e) {
 	var query2 = document.getElementById("search-analysis").elements[4].value;
 	var query3 = document.getElementById("search-analysis").elements[5].value;
 	
-	$.get("` + ngrokFrontend + `/search-analysis",{LAT:lat,LNG:lng,KEYWORD: keyword ,analysis_word1:query1 ,analysis_word2: query2,analysis_word3: query3}, function(data){
+	$.get(ngrokFrontend+"/search-analysis",{LAT:lat,LNG:lng,KEYWORD: keyword ,analysis_word1:query1 ,analysis_word2: query2,analysis_word3: query3}, function(data){
 	alert("Recomend:"+"\n"+data);
 	  });
   return false;

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -22,9 +21,8 @@ func init() {}
 func main() {
 	//handle
 	//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
-	http.HandleFunc("/form", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(w, WebView)
-	})
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.Handle("/", http.FileServer(http.Dir("templates")))
 
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {

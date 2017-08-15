@@ -36,7 +36,6 @@ func main() {
 		http.HandleFunc("/search", DataSearch)
 		http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
-		http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 		err := http.ListenAndServe(":"+port, nil)
 		if err != nil {
