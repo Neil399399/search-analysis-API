@@ -15,16 +15,15 @@ function SForm(e) {
   return false;
 };
 
-function RForm(e) {
+function AForm(e) {
     if (e.preventDefault) e.preventDefault();
-    var Parems =[query1,query2,query3]
 	 query1 = document.getElementById("analysis").elements[0].value;
 	 query2 = document.getElementById("analysis").elements[1].value;
      query3 = document.getElementById("analysis").elements[2].value;
-
-     searchvalues=JSON.stringify(searchdata);
-     message =[Parems,searchvalues]
-     jsonmessage=JSON.stringify(message)
+     var RequestMessage = {};
+     RequestMessage.Params = [query1, query2, query3]
+     RequestMessage.Data = searchdata
+     jsonmessage=JSON.stringify(RequestMessage)
      $.ajax({
         url : "` + ngrokFrontend + `/analysis",
         type: "POST",
@@ -67,4 +66,11 @@ if (form.attachEvent) {
     form.attachEvent("submit",  SForm);
 } else  {
     form.addEventListener("submit",  SForm);
+}
+
+var form = document.getElementById("analysis");
+if (form.attachEvent) {
+    form.attachEvent("submit",  AForm);
+} else  {
+    form.addEventListener("submit",  AForm);
 }

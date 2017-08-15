@@ -36,6 +36,7 @@ func main() {
 		http.HandleFunc("/search", DataSearch)
 		http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
+		http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 		err := http.ListenAndServe(":"+port, nil)
 		if err != nil {
@@ -117,6 +118,7 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 }
 
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var top [3]string
 
 	if req.Method == "POST" {

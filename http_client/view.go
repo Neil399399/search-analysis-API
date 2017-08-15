@@ -9,10 +9,10 @@ var WebView = `
 <form id="search">
 <h3>
 LAT&nbsp /&nbsp LNG<br>
-  <input type="text" name="LAT" value="lat">  <input type="text" name="LNG" value="lng">
+  <input type="text" name="LAT" value="25.03978">  <input type="text" name="LNG" value="121.548495">
   <br>
 Keyword:<br>
-  <input type="text" name="KEYWORD" value="word">  <button type="submit">Search!!</button> 
+  <input type="text" name="KEYWORD" value="海鮮餐廳">  <button type="submit">Search!!</button> 
   <br><h3>
 
 <hr color=#ff6600>
@@ -22,7 +22,7 @@ Keyword:<br>
 <form id="analysis">
 <h3>
   Query:<br>
-  <input type="text" name="analysis_word1" value="Comment1">  <input type="text" name="analysis_word2" value="Comment2"> <input type="text" name="analysis_word3" value="Comment3">
+  <input type="text" name="analysis_word1" value="新鮮">  <input type="text" name="analysis_word2" value="好吃"> <input type="text" name="analysis_word3" value="便宜">
   <br>
 <textarea rows="4" cols="50"></textarea>
  <button type="submit" value="Analysis">Analysis!!</button>
@@ -51,10 +51,7 @@ Keyword:<br>
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js">
-
-
-</script>
+<script  src="static/API.js" type="text/javascript"></script>
 
 
 </body>
