@@ -12,8 +12,8 @@ type Client struct {
 
 var (
 	url           = "http://localhost"
-	ngrokFrontend = "http://2ebeba59.ngrok.io"
-	ngrokBackend  = "http://b5742cca.ngrok.io"
+	ngrokFrontend = "http://67ddbfbe.ngrok.io"
+	ngrokBackend  = " http://22f820fd.ngrok.io"
 	port          = "8080"
 )
 

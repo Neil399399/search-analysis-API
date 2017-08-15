@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
@@ -33,7 +34,7 @@ func main() {
 		//handle
 		//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
 		http.HandleFunc("/search", DataSearch)
-		//http.HandleFunc("/analysis", DataAnalysis)
+		http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
 
 		err := http.ListenAndServe(":"+port, nil)
@@ -115,16 +116,11 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, string(b))
 }
 
-/*
 func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 	var top [3]string
-	var name1, name2, name3 string
-	querys = []string{name1, name2, name3}
+
 	if req.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json")
-		name1 = req.FormValue("analysis word 1")
-		name2 = req.FormValue("analysis word 2")
-		name3 = req.FormValue("analysis word 3")
 
 		body, err := ioutil.ReadAll(req.Body)
 		if err != nil {
@@ -147,7 +143,7 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 		//check err
 
 		//run jieba
-		jiebres, err := jiebatest(list, querys)
+		jiebres, err := jiebatest(requestMessage.Data, requestMessage.Params)
 		if err != nil {
 			fmt.Println("jieba Error!!", err)
 		}
@@ -165,7 +161,7 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 
 		//print top3
 
-		top1, top2, top3, err := FindIDInfo(first, second, third, list)
+		top1, top2, top3, err := FindIDInfo(first, second, third, requestMessage.Data)
 		if err != nil {
 			fmt.Println("json marshal failed!!", err)
 		}
@@ -180,7 +176,7 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 
 	}
 }
-*/
+
 func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	var top [3]string
 	//set header to tell server which http domain can connect
