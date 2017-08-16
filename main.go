@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"search-analysis-API/datamodel"
+	"search-analysis-API/search"
 	"strconv"
 )
 
@@ -25,14 +26,23 @@ var (
 )
 
 func main() {
-	APIKey = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
-	keyword = "coffee"
+
+	/*	search50 := search.NewSearch("", 50)
+		search100 := search.NewSearch("", 100)
+
+		search50.Place()
+		search100.Place()
+	*/
+	search.Initialize("", 500)
+	//search.APIKey = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+	//search.keyword = "coffee"
 
 	//wwww.google.com/maps?long=30&lat=30
 	//http server
 	myFunction := func() {
 		//handle
 		//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
+
 		http.HandleFunc("/search", DataSearch)
 		http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
@@ -90,7 +100,7 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//check from client
-	Search.APIKEY = APIKey
+	Search.APIKEY = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
 	Search.KEYWORD = keyword
 	if !Search.Verify(Search) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -100,7 +110,7 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "json")
 
 	//search
-	List, err := PlaceSearch(keyword, Search.LAT, Search.LNG)
+	List, err := search.PlaceSearch(keyword, Search.LAT, Search.LNG)
 	if err != nil {
 		fmt.Println("google Place Search Error!!", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -215,7 +225,7 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//check from client
-	Search.APIKEY = APIKey
+	Search.APIKEY = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
 	Search.KEYWORD = keyword
 	if !Search.Verify(Search) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -224,7 +234,7 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "json")
 	//search
-	List, err := PlaceSearch(keyword, Search.LAT, Search.LNG)
+	List, err := search.PlaceSearch(keyword, Search.LAT, Search.LNG)
 	if err != nil {
 		fmt.Println("google Place Search Error!!", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)

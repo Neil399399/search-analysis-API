@@ -9,9 +9,6 @@ type Coffee struct {
 	Name    string
 	Rate    float32
 	Reviews []Review
-
-	TEXT []string
-	Text string
 }
 
 type Review struct {

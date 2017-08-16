@@ -1,18 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"search-analysis-API/datamodel"
 	"sort"
 
 	"github.com/blevesearch/bleve"
-	"github.com/yanyiwu/gojieba"
 )
 
+/*
 type JiebaTokenizer struct {
 	handle *gojieba.Jieba
-}
+}*/
 
 type CountArray struct {
 	id    string
@@ -25,15 +24,6 @@ var (
 )
 
 func init() {
-	/*
-		querys = []string{
-			"環境舒服",
-			"不錯",
-			"新鮮",
-			"好吃",
-			"好",
-		}*/
-
 	//bleve.Open
 	indexMapping := bleve.NewIndexMapping()
 	index, err := bleve.NewMemOnly(indexMapping)
@@ -97,34 +87,6 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 	}
 
 	return dataCounter, nil
-}
-
-func prettify(res *bleve.SearchResult) (string, error) {
-	type Result struct {
-		Id    string
-		Score float64
-	}
-	results := []Result{}
-	for _, item := range res.Hits {
-		results = append(results, Result{item.ID, item.Score})
-	}
-
-	b, err := json.Marshal(results)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-
-	return string(b), nil
-}
-
-func CountResult(data map[string]int) error {
-
-	for k, v := range data {
-		fmt.Println("id:", k)
-		fmt.Println("total:", v)
-	}
-	return nil
 }
 
 func SortTotal(data map[string]int) ([]CountArray, error) {
