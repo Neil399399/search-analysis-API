@@ -1,4 +1,4 @@
-package main
+package bleve
 
 import (
 	"errors"
@@ -86,7 +86,7 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 		res, err := getFreeIndex().Search(req)
 		if err != nil {
 			fmt.Println("Serach Index error!!")
-			return nil,err
+			return nil, err
 		}
 		results := []Result{}
 		for _, item := range res.Hits {

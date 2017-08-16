@@ -1,4 +1,4 @@
-package main
+package bleve
 
 import (
 	"errors"
@@ -34,7 +34,7 @@ func Testjieba(t *testing.T) {
 func TestjiebaIndexNull(t *testing.T) {
 
 	testmodel := []datamodel.Coffee{}
-	querys = []string{}
+	querys := []string{}
 
 	_, err := jiebatest(testmodel, querys)
 	t.Log(err)

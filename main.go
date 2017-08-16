@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"search-analysis-API/bleve"
 	"search-analysis-API/datamodel"
 	"search-analysis-API/search"
 	"strconv"
@@ -125,25 +126,25 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		//run jieba
-		jiebres, err := jiebatest(requestMessage.Data, requestMessage.Params)
-		if err == ErrNoData {
+		jiebres, err := bleve.jiebatest(requestMessage.Data, requestMessage.Params)
+		if err == bleve.ErrNoData {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
-		if err == ErrIndexSearch {
+		if err == bleve.ErrIndexSearch {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 		//count total
-		sortres, err := SortTotal(jiebres)
+		sortres, err := bleve.SortTotal(jiebres)
 		if err != nil {
 			fmt.Println("Sort Total Error!!", err)
 		}
 		//find top3
-		first, second, third, err := Top3(sortres)
+		first, second, third, err := bleve.Top3(sortres)
 		if err != nil {
 			fmt.Println("Find Top3 Error!!", err)
 		}
 		//print top3
-		top1, top2, top3, err := FindIDInfo(first, second, third, requestMessage.Data)
+		top1, top2, top3, err := bleve.FindIDInfo(first, second, third, requestMessage.Data)
 		if err != nil {
 			fmt.Println("json marshal failed!!", err)
 		}
@@ -174,7 +175,10 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	name1 := req.FormValue("analysis_word1")
 	name2 := req.FormValue("analysis_word2")
 	name3 := req.FormValue("analysis_word3")
-	querys = []string{name1, name2, name3}
+	querys := make([]string, 3)
+	querys[0] = name1
+	querys[1] = name2
+	querys[2] = name3
 
 	//check lat,lng format from http
 	if len(lat) != 0 {
@@ -216,25 +220,25 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	}
 	fmt.Println("google  Search Success!!")
 	//Analysis
-	jiebres, err := jiebatest(List, querys)
+	jiebres, err := bleve.jiebatest(List, querys)
 	if err != nil {
 		fmt.Println("jieba Error!!", err)
 	}
 	//count total
-	sortres, err := SortTotal(jiebres)
+	sortres, err := bleve.SortTotal(jiebres)
 	if err != nil {
 		fmt.Println("Sort Total Error!!", err)
 	}
 
 	//find top3
-	first, second, third, err := Top3(sortres)
+	first, second, third, err := bleve.Top3(sortres)
 	if err != nil {
 		fmt.Println("Find Top3 Error!!", err)
 	}
 
 	//print top3
 
-	top1, top2, top3, err := FindIDInfo(first, second, third, List)
+	top1, top2, top3, err := bleve.FindIDInfo(first, second, third, List)
 	if err != nil {
 		fmt.Println("json marshal failed!!", err)
 	}
