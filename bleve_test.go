@@ -1,4 +1,4 @@
-package bleve
+package main
 
 import (
 	"errors"
@@ -24,7 +24,7 @@ func Testjieba(t *testing.T) {
 		"好地方",
 		"好",
 	}
-	_, err := jiebatest(testmodel, querys)
+	_, err := Jiebatest(testmodel, querys)
 	if err != nil {
 		t.Error(err)
 	}
@@ -36,7 +36,7 @@ func TestjiebaIndexNull(t *testing.T) {
 	testmodel := []datamodel.Coffee{}
 	querys := []string{}
 
-	_, err := jiebatest(testmodel, querys)
+	_, err := Jiebatest(testmodel, querys)
 	t.Log(err)
 	if err != ErrNoData {
 		t.Error(err)
@@ -55,7 +55,7 @@ func TestjiebaIndexSearchErrorMessage(t *testing.T) {
 
 	querys = []string{}
 
-	_, err := jiebatest(testmodel, querys)
+	_, err := Jiebatest(testmodel, querys)
 	if err != ErrIndexSearch {
 		t.Error(err)
 	}

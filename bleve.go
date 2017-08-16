@@ -1,4 +1,4 @@
-package bleve
+package main
 
 import (
 	"errors"
@@ -7,12 +7,12 @@ import (
 	"sort"
 
 	"github.com/blevesearch/bleve"
-	"github.com/yanyiwu/gojieba"
 )
 
+/*
 type JiebaTokenizer struct {
 	handle *gojieba.Jieba
-}
+}*/
 
 type CountArray struct {
 	id    string
@@ -56,7 +56,7 @@ func getFreeIndex() bleve.Index {
 	return Index
 }
 
-func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) {
+func Jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) {
 	type Result struct {
 		Id    string
 		Score float64

@@ -44,3 +44,7 @@ func TestSetRadius(t *testing.T) {
 	}
 
 }
+
+func BenchmarkSetRadius(b *testing.B) {
+
+}
