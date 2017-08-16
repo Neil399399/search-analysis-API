@@ -31,10 +31,6 @@ type Search struct {
 func (s Search) Verify(data Search) bool {
 	//Verify
 	//check
-	if len(data.APIKEY) == 0 {
-		fmt.Println("APIKEY has wrong format !!!")
-		return false
-	}
 	if len(data.KEYWORD) == 0 {
 		fmt.Println("KEYWORD has wrong format !!!")
 		return false

@@ -76,7 +76,6 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	search500 := search.NewSearch(apikey, 500)
-
 	Search.KEYWORD = keyword
 	if !Search.Verify(Search) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -86,14 +85,12 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "json")
 
 	//search
-	List, err := search500.Place(keyword, Search.LAT, Search.LNG)
+	List, err := search500.Place(Search.KEYWORD, Search.LAT, Search.LNG)
 	if err != nil {
 		fmt.Println("google Place Search Error!!", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	//fmt.Println("google Search Success!!")
-
 	//convert to json, give to fprint
 	b, err := json.Marshal(List)
 	if err != nil {
