@@ -12,6 +12,39 @@ var (
 )
 
 func Testjieba(t *testing.T) {
+	testmodel := []datamodel.Coffee{}
+	testmodel[0].Id = "ab23bc888a##$%^bc"
+	testmodel[0].Name = "hellocoffee"
+	testmodel[0].Rate = 9.9
+	testmodel[0].Reviews[0].StoreId = "ab23bc888a##$%^bc"
+	testmodel[0].Reviews[0].Text = "內裝舒適，座位寛敞，聊天小歇的好地方。"
+
+	querys := []string{
+		"舒適",
+		"好地方",
+		"好",
+	}
+	_, err := jiebatest(testmodel, querys)
+	if err != nil {
+		t.Error(err)
+	}
+
+}
+
+func TestjiebaIndexNull(t *testing.T) {
+
+	testmodel := []datamodel.Coffee{}
+	querys = []string{}
+
+	_, err := jiebatest(testmodel, querys)
+	t.Log(err)
+	if err != ErrNoData {
+		t.Error(err)
+	}
+
+}
+
+func TestjiebaIndexSearchErrorMessage(t *testing.T) {
 
 	testmodel := []datamodel.Coffee{}
 	testmodel[0].Id = "ab23bc888a##$%^bc"
@@ -20,13 +53,10 @@ func Testjieba(t *testing.T) {
 	testmodel[0].Reviews[0].StoreId = "ab23bc888a##$%^bc"
 	testmodel[0].Reviews[0].Text = "內裝舒適，座位寛敞，聊天小歇的好地方。"
 
-	querys = []string{
-		"舒適",
-		"好地方",
-		"好",
-	}
+	querys = []string{}
+
 	_, err := jiebatest(testmodel, querys)
-	if err != nil {
+	if err != ErrIndexSearch {
 		t.Error(err)
 	}
 

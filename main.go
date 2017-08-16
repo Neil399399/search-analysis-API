@@ -126,8 +126,11 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 		}
 		//run jieba
 		jiebres, err := jiebatest(requestMessage.Data, requestMessage.Params)
-		if err != nil {
-			fmt.Println("jieba Error!!", err)
+		if err == ErrNoData {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		if err == ErrIndexSearch {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 		//count total
 		sortres, err := SortTotal(jiebres)

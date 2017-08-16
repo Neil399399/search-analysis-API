@@ -22,8 +22,9 @@ type CountArray struct {
 var (
 	querys            []string
 	Index             bleve.Index
-	ErrNoData         = errors.New("No data")
+	ErrNoData         = errors.New("No data to index!!")
 	ErrNotInitialized = errors.New("Not Initialized")
+	ErrIndexSearch    = errors.New("Search Index error!!")
 )
 
 func init() {
@@ -61,15 +62,22 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 		Score float64
 	}
 	//create index_dir
+	if len(com) == 0 {
+		return nil, ErrNoData
+	}
 	for i := 0; i < len(com); i++ {
 		err := getFreeIndex().Index(com[i].Id, com[i].Reviews)
 		if err != nil {
-			panic("get free index error!!" + err.Error())
+			fmt.Println("get free index error!!", err)
+			return nil, err
 
 		}
 	}
 
 	dataCounter := make(map[string]int)
+	if len(querys) == 0 {
+		return nil, ErrIndexSearch
+	}
 	for _, q := range querys {
 
 		req := bleve.NewSearchRequest(bleve.NewQueryStringQuery(q))
@@ -77,7 +85,8 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 		req.Highlight = bleve.NewHighlight()
 		res, err := getFreeIndex().Search(req)
 		if err != nil {
-			panic(err)
+			fmt.Println("Serach Index error!!")
+			return nil,err
 		}
 		results := []Result{}
 		for _, item := range res.Hits {
