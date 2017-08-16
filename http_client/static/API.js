@@ -2,10 +2,11 @@ var searchdata = Object
 function SForm(e) {
 	
     if (e.preventDefault) e.preventDefault();
+    var apikey = document.getElementById("apikey").elements[0].value;
 	var lat = document.getElementById("search").elements[0].value;
 	var lng = document.getElementById("search").elements[1].value;
 	var keyword = document.getElementById("search").elements[2].value;
-	$.get(ngrokFrontend+"/search",{LAT:lat,LNG:lng,KEYWORD: keyword }, function(data){
+	$.get(ngrokFrontend+"/search",{APIKEY:apikey,LAT:lat,LNG:lng,KEYWORD: keyword }, function(data){
         searchdata = data
         values=JSON.stringify(data);
 	alert("Results:"+"\n"+values);
@@ -39,7 +40,7 @@ function AForm(e) {
 
 function SAForm(e) {
 	if (e.preventDefault) e.preventDefault();
-	
+	var apikey = document.getElementById("apikey").elements[0].value;
 	var lat = document.getElementById("search-analysis").elements[0].value;
 	var lng = document.getElementById("search-analysis").elements[1].value;
 	var keyword = document.getElementById("search-analysis").elements[2].value;
@@ -47,7 +48,7 @@ function SAForm(e) {
 	var query2 = document.getElementById("search-analysis").elements[4].value;
 	var query3 = document.getElementById("search-analysis").elements[5].value;
 	
-	$.get(ngrokFrontend+"/search-analysis",{LAT:lat,LNG:lng,KEYWORD: keyword ,analysis_word1:query1 ,analysis_word2: query2,analysis_word3: query3}, function(data){
+	$.get(ngrokFrontend+"/search-analysis",{APIKEY:apikey,LAT:lat,LNG:lng,KEYWORD: keyword ,analysis_word1:query1 ,analysis_word2: query2,analysis_word3: query3}, function(data){
 	alert("Recomend:"+"\n"+data);
 	  });
   return false;

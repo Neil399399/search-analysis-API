@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"search-analysis-API/datamodel"
 	"sort"
@@ -19,8 +20,10 @@ type CountArray struct {
 }
 
 var (
-	querys []string
-	Index  bleve.Index
+	querys            []string
+	Index             bleve.Index
+	ErrNoData         = errors.New("No data")
+	ErrNotInitialized = errors.New("Not Initialized")
 )
 
 func init() {
@@ -57,11 +60,11 @@ func jiebatest(com []datamodel.Coffee, querys []string) (map[string]int, error) 
 		Id    string
 		Score float64
 	}
-
 	//create index_dir
 	for i := 0; i < len(com); i++ {
 		err := getFreeIndex().Index(com[i].Id, com[i].Reviews)
 		if err != nil {
+			panic("get free index error!!" + err.Error())
 
 		}
 	}

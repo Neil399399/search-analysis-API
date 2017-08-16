@@ -13,6 +13,7 @@ import (
 var (
 	//set up errors
 	ErrNoAPIKey       = errors.New("No API Key")
+	ErrNoRadius       = errors.New("No Radius ")
 	ErrNotInitialized = errors.New("Not Initialized")
 
 	apikey string // "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
@@ -26,7 +27,7 @@ type Search struct {
 }
 
 func NewSearch(key string, radius uint) *Search {
-	return &Search{apikey, radius}
+	return &Search{key, radius}
 }
 
 //check apikey is not null

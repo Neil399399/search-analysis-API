@@ -12,14 +12,6 @@ import (
 	"strconv"
 )
 
-/*
-	create blevedir+"/"+lat_long_timestamp
-	check if used
-	if not, create index
-		input lat/long data into bleve index
-	do jieba
-	return results
-*/
 var (
 	port   = "80"
 	Search datamodel.Search
@@ -27,22 +19,9 @@ var (
 
 func main() {
 
-	/*	search50 := search.NewSearch("", 50)
-		search100 := search.NewSearch("", 100)
-
-		search50.Place()
-		search100.Place()
-	*/
-	search.Initialize("", 500)
-	//search.APIKey = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
-	//search.keyword = "coffee"
-
-	//wwww.google.com/maps?long=30&lat=30
 	//http server
 	myFunction := func() {
 		//handle
-		//&LAT=%f&LNG=%f&KEYWORD=%S", APIKey, Lat, Lng, keyword,
-
 		http.HandleFunc("/search", DataSearch)
 		http.HandleFunc("/analysis", DataAnalysis)
 		http.HandleFunc("/search-analysis", DataSearch_Analysis)
@@ -58,25 +37,16 @@ func main() {
 	signal.Notify(endChannel)
 	sig := <-endChannel
 	fmt.Println("END!:", sig)
-
-	//handle
 }
 
-/*
-1 search: /search?lat... <- list results
-2 analyze:/search?listresults <- get analysis
-3 create UI
-
-
-*/
-
+//function
 func DataSearch(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if req.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
+	apikey := req.FormValue("APIKEY")
 	lat := req.FormValue("LAT")
 	lng := req.FormValue("LNG")
 	keyword := req.FormValue("KEYWORD")
@@ -100,7 +70,13 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//check from client
-	Search.APIKEY = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+	err := search.Initialize(apikey, 500)
+	if err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	search500 := search.NewSearch(apikey, 500)
+
 	Search.KEYWORD = keyword
 	if !Search.Verify(Search) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -110,19 +86,19 @@ func DataSearch(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "json")
 
 	//search
-	List, err := search.PlaceSearch(keyword, Search.LAT, Search.LNG)
+	List, err := search500.Place(keyword, Search.LAT, Search.LNG)
 	if err != nil {
 		fmt.Println("google Place Search Error!!", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("google Search Success!!")
+	//fmt.Println("google Search Success!!")
+
 	//convert to json, give to fprint
 	b, err := json.Marshal(List)
 	if err != nil {
 		fmt.Println("Json Marchal Error!!", err)
 	}
-
 	fmt.Fprint(w, string(b))
 }
 
@@ -151,8 +127,6 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 			fmt.Println("Json Unmarshal Error!!", err)
 			return
 		}
-		//check err
-
 		//run jieba
 		jiebres, err := jiebatest(requestMessage.Data, requestMessage.Params)
 		if err != nil {
@@ -163,15 +137,12 @@ func DataAnalysis(w http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			fmt.Println("Sort Total Error!!", err)
 		}
-
 		//find top3
 		first, second, third, err := Top3(sortres)
 		if err != nil {
 			fmt.Println("Find Top3 Error!!", err)
 		}
-
 		//print top3
-
 		top1, top2, top3, err := FindIDInfo(first, second, third, requestMessage.Data)
 		if err != nil {
 			fmt.Println("json marshal failed!!", err)
@@ -192,12 +163,11 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 	var top [3]string
 	//set header to tell server which http domain can connect
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	if req.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
+	apikey := req.FormValue("APIKEY")
 	lat := req.FormValue("LAT")
 	lng := req.FormValue("LNG")
 	keyword := req.FormValue("KEYWORD")
@@ -223,18 +193,22 @@ func DataSearch_Analysis(w http.ResponseWriter, req *http.Request) {
 		}
 		Search.LNG = lng64
 	}
-
 	//check from client
-	Search.APIKEY = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+	err := search.Initialize(apikey, 500)
+	if err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	search500 := search.NewSearch(apikey, 500)
 	Search.KEYWORD = keyword
 	if !Search.Verify(Search) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-
+	//header set
 	w.Header().Set("Content-Type", "json")
 	//search
-	List, err := search.PlaceSearch(keyword, Search.LAT, Search.LNG)
+	List, err := search500.Place(keyword, Search.LAT, Search.LNG)
 	if err != nil {
 		fmt.Println("google Place Search Error!!", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
