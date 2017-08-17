@@ -1,11 +1,11 @@
 package search
 
 import (
+	"search-analysis-API/datamodel"
 	"testing"
 )
 
-var ()
-
+/*
 func TestNewSearch(t *testing.T) {
 	var testradius uint
 	testkey := "afjadkf"
@@ -45,7 +45,7 @@ func TestSetRadius(t *testing.T) {
 }
 
 //Benchmark
-
+*/
 func BenchmarkNewSearch(b *testing.B) {
 	// run the Fib function b.N times
 	var testradius uint
@@ -95,6 +95,65 @@ func BenchmarkPlaceSearch(b *testing.B) {
 	S := NewSearch(key, rad)
 	for n := 0; n < b.N; n++ {
 		_, _ = S.Place(keyword, lat, lng)
+	}
+}
+
+func BenchmarkPlaceSearchLayer1(b *testing.B) {
+	// run the Fib function b.N times
+	var key, keyword string
+	var rad uint
+	var lat, lng float64
+	key = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+	rad = 500
+	keyword = "海鮮餐廳"
+	lat = 25.03978
+	lng = 121.548495
+	S := NewSearch(key, rad)
+	for n := 0; n < b.N; n++ {
+		_ = S.Placesearchlayer1(keyword, lat, lng)
+	}
+
+}
+
+func BenchmarkPlaceSearchLayer2(b *testing.B) {
+	// run the Fib function b.N times
+	var key, keyword string
+	var rad uint
+	var lat, lng float64
+	key = "AIzaSyCigqPQLr341O-UL_jyJQNdX76fO0TtywA"
+	rad = 500
+	keyword = "海鮮餐廳"
+	lat = 25.03978
+	lng = 121.548495
+	S := NewSearch(key, rad)
+	for n := 0; n < b.N; n++ {
+		_ = S.Placesearchlayer1(keyword, lat, lng)
+	}
+
+}
+
+func BenchmarkSearchResultWriteIndatamodel(b *testing.B) {
+	// run the Fib function b.N times
+	for n := 0; n < b.N; n++ {
+		coffeeList := []datamodel.Coffee{}
+
+		for i := 0; i < 20; i++ {
+
+			cof := datamodel.Coffee{}
+			cof.Id = "asdfadf"
+			cof.Name = "hello"
+			cof.Rate = 9.9
+			cof.Reviews = []datamodel.Review{}
+
+			for j := 0; j < 5; j++ {
+
+				review := datamodel.Review{cof.Id, "fdhghdghasdfadf"}
+				cof.Reviews = append(cof.Reviews, review)
+			}
+
+			coffeeList = append(coffeeList, cof)
+		}
+
 	}
 
 }

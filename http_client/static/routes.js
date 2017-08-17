@@ -1,2 +1,2 @@
-var ngrokFrontend = "http://2d790f94.ngrok.io"
-var ngrokBackend = "http://6a907202.ngrok.io"
+var ngrokFrontend = "http://87140012.ngrok.io"
+var ngrokBackend = "http://25e5831f.ngrok.io"

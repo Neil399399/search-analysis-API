@@ -228,12 +228,16 @@ func BenchmarkTestFindIDInfo(b *testing.B) {
 }
 
 func BenchmarkTestjieba(b *testing.B) {
-	testmodel := []datamodel.Coffee{}
+	testmodel := make([]datamodel.Coffee, 1)
+	testreview := make([]datamodel.Review, 1)
 	testmodel[0].Id = "ab23bc888a##$%^bc"
 	testmodel[0].Name = "hellocoffee"
 	testmodel[0].Rate = 9.9
-	testmodel[0].Reviews[0].StoreId = "ab23bc888a##$%^bc"
-	testmodel[0].Reviews[0].Text = "內裝舒適，座位寛敞，聊天小歇的好地方。"
+
+	testreview[0].StoreId = "ab23bc888a##$%^bc"
+	testreview[0].Text = "內裝舒適，座位寛敞，聊天小歇的好地方。"
+
+	testmodel[0].Reviews = testreview
 
 	querys := []string{
 		"舒適",
