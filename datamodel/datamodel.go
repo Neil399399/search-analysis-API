@@ -8,6 +8,7 @@ type Coffee struct {
 	Id      string
 	Name    string
 	Rate    float32
+	Addr    string
 	Reviews []Review
 }
 

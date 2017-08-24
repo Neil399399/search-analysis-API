@@ -91,6 +91,8 @@ func (s *Search) Place(keyword string, LAT, LNG float64) ([]datamodel.Coffee, er
 			if err != nil {
 				log.Fatalf("fatal error: %s", err)
 			}
+			/*Format_address*/
+			cof.Addr = respd.FormattedAddress
 
 			for j := 0; j < len(respd.Reviews); j++ {
 

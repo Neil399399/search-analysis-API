@@ -5,6 +5,8 @@
 
 ---
 ## Should Downloads Library
+* **IF you have install glide , just run :**
+>  glide install
 * **[Google Maps](https://github.com/googlemaps/google-maps-services-go)** 
 >  go get googlemaps.github.io/maps
 
