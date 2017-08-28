@@ -1,4 +1,4 @@
-# Seearch-Analysis-API
+# Search-Analysis-API
 
 ## The API about google place search and Analysis by GoJieba
 
